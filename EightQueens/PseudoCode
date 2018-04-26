@@ -1,0 +1,110 @@
+PSEUDO CODE 
+
+Queen Class
+	final static NUM_QUEENS = 8;
+	String[NUM_QUEENS][NUM_QUEENS] board --to store all the queens as either a "" or a "Q"
+	int placeQueens; //Keep track of how many queens have been placed so far 
+	
+	//Logic//
+	
+	//Recursive checks which may be helpful for brute force?
+	boolean isRowClear(int r, int c) {
+		if(board[r][c] == "Q")	//Is a queen = invalid placement
+			return false
+		else if(board[r][[c] == null ) //reached end of the board = valid placement
+			return true
+		else if(board[r][c] == " " ) 
+			return isRowClear(r-1, c) && isRowClear(r+1, c) 	//Is a blank spot == check left and right spaces
+	}
+	
+	boolean isColClear(int r, int c) {
+		if(board[r][c] == "Q")	//Is a queen = invalid placement
+			return false
+		else if(board[r][[c] == null ) //reached end of the board = valid placement
+			return true
+		else if(board[r][c] == " " ) 
+			return isRowClear(r, c-1) && isRowClear(r, c+1) 	//Is a blank spot == check left and right spaces
+	}
+	
+	boolean isDiagonalClear(int r, int c) {
+		if(board[r][c] == "Q")	//Is a queen = invalid placement
+			return false
+		else if(board[r][[c] == null ) //reached end of the board = valid placement
+			return true
+		else if(board[r][c] == " " ) 
+			return isDiagonalClear(r+1, c+1) && isDiagonalClear(r-1, c-1) //Down right and up left
+				&& isDiagonalClear(r+1, c-1) && isDiagonalClear(r-1, c+1) //up Right and down left 
+	}
+	
+	boolean isClear(int r, int c) {
+		return isRowClear() && isColClear(r, c) && isDiagonalClear(r, c);
+	}
+	
+	boolean isSolution() {
+		return (placedQueens == 8);
+	}
+	
+	//USE MATH TO CALC THE MAJ AND MIN DIAGONALS
+	
+	void place() {	//Can't be this easy...
+		for(int r = 0; r < NUM_QUEENS; i++) {
+			for(int c = 0; c < NUM_QUEENS; i++) {
+				if( isClear(r, c) ) 
+					board[r][c] == "Q";
+			}
+		}
+		if(isSolution())
+			//Write the solution to an output... How to make the program generate more than 1 solution...
+	}
+	
+	//Graphics//
+	draw() {
+		for each row 
+			for each column		
+				if(board[r][c] == "Q")
+					//Draw a Queen img 
+				else 
+					//just draw the square (code won't actually be implemented here, but in the Panel?
+	}	
+}
+
+
+class ChessSquarePanel extends JPanel {
+	public static img = new Image("Queen.png")//Have a single queen image
+	int numSquare; //Keeps track of which square you're at to determine its color
+	
+	
+	ChessSquarePanel(Color bg, boolean isEmpty) {
+		if(!isEmpty) { paintcomponent.draw(img)}
+	}
+	
+	public void pantComponenet(Graphics g, int numSquare) {
+		super.paintComponent(g);	//super
+		int w = getWidth();	//grab dimensions of self panel
+		int h = getHeight();
+		if(numSquares % 2 == 0)	//set it's color acc to 
+			g.setColor(~lightbrown~)	//SET BACKGROUND COLOR TO everyother 
+		else 
+			g.setColor(~darkbrown~);
+			
+		g.drawRect(getX, getY, w, h);
+		
+		//This is the grid layout thing, but where does is it go
+		Container c = getContentPane();
+		c.setLayout(new GridLayout(2, 2, 1, 1) );
+		
+	}
+	
+	public static main(String[] args) {
+		JFrame window = new JFrame("Drawings");
+		//window.setBounds(800, 600)
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+		JPanel canvas = new CLASS ChessSquarePanel();
+		canvas.setBackground(Color.white)
+		window.getContentPanel().add(canvas)
+		window.setVisible(true)
+	}
+	
+}
+
+
