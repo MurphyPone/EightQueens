@@ -2,12 +2,21 @@
 public class Board {
 	private final static int NQ = BoardPanel.NUM_QUEENS;
 	private int placedQueens;
-	private String[][] b;
+	private String[][] b; //Could be boolean?
 	
 	public Board() {
 		b = new String[NQ][NQ];
 		fillBoard(); //config
 		placedQueens = 0;
+	}
+	
+	//CONSTRUCTOR HELPER// 
+	private void fillBoard() {
+		for(int r = 0; r < NQ; r++) {
+			for(int c = 0; c < NQ; c++) {
+				b[r][c] = " "; 
+			}
+		}
 	}
 	
 	//Logical Methods //Should hash every position 
@@ -43,16 +52,6 @@ public class Board {
 	
 	//End Logic//
 	
-	//Helper setup 
-	private void fillBoard() {
-		for(int r = 0; r < NQ; r++) {
-			for(int c = 0; c < NQ; c++) {
-				b[r][c] = " "; 
-			}
-		}
-	}
-	
-	
 	public void addQueens() {
 		while(placedQueens < NQ) {
 			for(int r = 0; r < NQ; r++) {
@@ -64,6 +63,11 @@ public class Board {
 				}
 			}
 		}
+	}
+	
+	//GETTERS AND SETTERS//
+	public boolean isQueen(int r, int c) {
+		return b[r][c].equals("Q");
 	}
 	
 	public String toString() {

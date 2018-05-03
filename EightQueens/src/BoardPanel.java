@@ -10,20 +10,21 @@ import javax.swing.JPanel;
 
 public class BoardPanel {
 	private Board b; //has a Board
-	//Pnale/Frame stuff
-	private ArrayList<ChessSquarePanel> panels;
-	private JFrame window;
+	//Panel/Frame stuff
+	private JFrame window; //Outermost grpahical component
 	private JPanel header, grid, footer; //Panels 
-	
+	ChessSquarePanel[][] spaces = new ChessSquarePanel[ROWS][COLS]; // not sure how this is different than Grids?
 	
 	public static final int NUM_QUEENS = 8;
 	private static final int ROWS = NUM_QUEENS;
 	private static final int COLS = NUM_QUEENS; 
 	
-	private static final int HEIGHT = 120 * ROWS;
-	private static final int WIDTH = 120 * COLS;
-	private static final Color LIGHT_COLOR = Color.ORANGE;
+	private static final int HEIGHT = 100 * ROWS;
+	private static final int WIDTH = 100 * COLS;
+	private static final Color LIGHT_COLOR = Color.LIGHT_GRAY;
 	private static final Color DARK_COLOR = Color.DARK_GRAY;
+	private static final Color FOOTER_COLOR = Color.MAGENTA;
+	private static final Color HEADER_COLOR = Color.CYAN;
 	
 	
 	//Constructor
@@ -43,19 +44,62 @@ public class BoardPanel {
 	}
 	
 	private void createPanels() {
+		//Construct the panels
 		header = buildHeaderPanel();
 		grid = buildGridPanel();
-		footer = buildfooterPanel();
+		footer = buildFooterPanel();
+		//Add the panels to the Window
+		window.add(header);
+		window.add(grid);
+		window.add(footer);
+		window.repaint(); //repaint after configuring just in case?
+		window.setVisible(true);	//show the window
 	}
 	
+	//CONSTRUCTOR HELPERS//
 	private JPanel buildHeaderPanel() {
 		JPanel result = new JPanel();
 		result.setMinimumSize(new Dimension(WIDTH, 10));
 		result.setMaximumSize(new Dimension(WIDTH, 50));
 		result.setPreferredSize(new Dimension(WIDTH, 40));
-		result.setBackground(LIGHT_COLOR);
+		result.setBackground(HEADER_COLOR);
 		result.add(new JLabel("eight Queens"));
 	    return result;
+	}
+	
+	private JPanel buildFooterPanel() {
+		JPanel result = new JPanel();
+		result.setMinimumSize(new Dimension(WIDTH, 10));
+		result.setMaximumSize(new Dimension(WIDTH, 50));
+		result.setPreferredSize(new Dimension(WIDTH, 40));
+		result.setBackground(FOOTER_COLOR);
+		result.add(new JLabel("eight Queens"));
+	    return result;
+	}
+	
+	private JPanel buildGridPanel() {
+		JPanel p = new JPanel();
+	    p.setLayout(new GridLayout(ROWS,COLS));
+		p.setMinimumSize(new Dimension(WIDTH/2, HEIGHT/2));
+	    p.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+	    Color bg;
+	    for (int r = 0; r < ROWS; r++) {
+	    		for (int c = 0; c < COLS; c++) {
+	    			bg = setPanelColor(r,c); //get the bg color based on index of array
+	    			boolean q = b.isQueen(r, c);
+	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); //TODO make the flag actually work
+	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
+	            p.add(m);
+	         }
+	      }
+	      return p;
+	}
+	
+	//GRAPHICAL HELPERS//
+	private void updatePanel(int r, int c, boolean q) {
+		ChessSquarePanel p = spaces[r][c];
+		p.setQueen(q);
+		window.repaint(); //NEed this bc I don't update in repaint
 	}
 	
 	//Helper logic method
@@ -68,23 +112,9 @@ public class BoardPanel {
 	        return DARK_COLOR;
 	}
 	
-	private JPanel buildGridPanel() {
-		JPanel p = new JPanel();
-	    p.setLayout(new GridLayout(ROWS,COLS));
-	    Color bg;
-	    for (int r = 0; r < ROWS; r++) {
-	    	for (int c = 0; c < COLS; c++) {
-	    		bg = setPanelColor(r,c);           
-	            MyPanel m = new MyPanel(bg, (char)((int)'a' + r * COLS + c) + ""); //TODO INSTEAD this should be a ChessSquarePanel
-	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
-	            p.add(m);
-	         }
-	      }
-	      return p;
-	}
-	
 	public static void main(String[] args) {
-		
+		BoardPanel x = new BoardPanel();
+		x.updatePanel(2, 2, true); //test to change 3,3 to true
 	}
 
 }
