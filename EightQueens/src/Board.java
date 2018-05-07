@@ -21,17 +21,25 @@ public class Board {
 	
 	//Logical Methods //Should hash every position 
 	private boolean isRowClear(int r, int c) {
-		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		if(b[r][c].equals("Q") ) { return false; } //conflict
-		//else if(board[r][c].equals(" ") ) 
-		return isRowClear(r-1, c) && isRowClear(r+1, c); //If empty, 
+		//if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		//if(b[r][c].equals("Q") ) { return false; } //conflict
+			//else if(board[r][c].equals(" ") ) 
+		for(int i = 0; i < NQ; i++) {
+			if(b[i][c].equals("Q") ) { return false; }
+		}
+		return true;
+		//return isRowClear(r-1, c) && isRowClear(r+1, c); //If empty, 
 	}
 	
 	private boolean isColClear(int r, int c) {
-		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board --> check before indexing out of bounds
-		if(b[r][c].equals("Q") ) { return false; } //conflict
-		//else if(board[r][c].equals(" ") ) 
-		return isColClear(r, c-1) && isColClear(r, c+1); //If empty, 
+		//if( isOutOfBounds(r, c) ) { return true; } //Reached end of board --> check before indexing out of bounds
+		//if(b[r][c].equals("Q") ) { return false; } //conflict
+			//else if(board[r][c].equals(" ") ) 
+		for(int i = 0; i < NQ; i++) {
+			if(b[r][i].equals("Q") ) { return false; }
+		}
+		return true;
+		//return isColClear(r, c-1) && isColClear(r, c+1); //If empty, 
 	}
 	
 	private boolean isDiagonalClear(int r, int c) {
@@ -47,7 +55,7 @@ public class Board {
 	}
 	
 	public boolean isClear(int r, int c) {
-		return isRowClear(r, c) && isColClear(r, c) && isDiagonalClear(r, c);
+		return isRowClear(r, c) && isColClear(r, c);// && isDiagonalClear(r, c);
 	}
 	
 	public boolean isSolution() {
@@ -79,7 +87,7 @@ public class Board {
 		for(int r = 0; r < NQ; r++) {
 			for(int c = 0; c < NQ; c++) {
 				if(b[r][c].equals("Q") )
-					result += b[r][c];
+					result += b[r][c] + " ";
 				else 
 					result += "X ";
 			}
