@@ -86,9 +86,32 @@ public class Board {
 		//}
 	}
 	
+	
+	public boolean addQueens(LinkedList<Queen> QP) {
+		if(QP.size() == NQ) {
+			for( Queen q : QP ) {
+				b[q.r][q.c] = "Q";
+				return true; //copy over the realy Queens
+			}
+		} else {
+			for(int r = 0; r < NQ; r++ ) {
+				for(int c = 0; c < NQ c++; ) {
+					if ( isValid(r, c) )
+						return true;
+					else 
+						return false/break?
+				}
+			}
+		}
+	}
+	
 	//GETTERS AND SETTERS//
 	public boolean isQueen(int r, int c) {
 		return b[r][c].equals("Q");
+	}
+	
+	public void setQueen(int r, int c) {
+		b[r][c] = "Q";
 	}
 	
 	public String toString() {
@@ -108,6 +131,7 @@ public class Board {
 	
 	public static void main(String[] args) {
 		Board x = new Board();
+		x.setQueen(2, 0);
 		x.addQueens();
 		System.out.println( x.isSolution() );
 		System.out.println(x);

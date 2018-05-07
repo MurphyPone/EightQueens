@@ -1,3 +1,57 @@
+Queen() {
+	int r, c
+	Queen(int row, int col) { r = row; c = col; }
+	
+	get/set
+}
+
+
+Board.addQueens(LinkedList<Queen> QP) {
+	if QP.length == NUM_QUEENS 
+		for Queen q : QP 
+			b[q.r][q.c] = "Q"; //copy the solution to the board
+		return true & display solution
+	else 
+		for(row)
+			//check if you can place a queen in each of the columns
+			//if so, then return true
+			//if not false
+			//call this method 8 times from each row 
+			
+}
+
+
+
+isValid(List QP, int r, c) {
+	for Queen q : qp 
+		if q.r == r
+			return false //rows
+		if q.c == c
+			return false //cols
+		if m //Calculate the major diagonal?
+}
+
+boolean isDV(int r, int c) {
+	int offset = 0;
+	while(r <= NQ && c <= NQ) 
+		if isQueen(r+offset, c+offset)
+			return false 
+		offset++
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 PSEUDO CODE 
 
 Queen Class
