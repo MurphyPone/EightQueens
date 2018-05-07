@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class BoardPanel {
+public class BoardFrame {
 	private Board b; //has a Board
 	//Panel/Frame stuff
 	private JFrame window; //Outermost grpahical component
@@ -28,7 +28,7 @@ public class BoardPanel {
 	
 	
 	//Constructor
-	public BoardPanel() { 
+	public BoardFrame() { 
 		b = new Board(); //Create the Board
 		buildFrame(); //Build the Frame 
 		createPanels(); //Create the ChessSquarePanels  
@@ -113,7 +113,7 @@ public class BoardPanel {
 	}
 	
 	public static void main(String[] args) {
-		BoardPanel x = new BoardPanel();
+		BoardFrame x = new BoardFrame();
 		x.updatePanel(2, 2, true); //test to change 3,3 to true
 	}
 

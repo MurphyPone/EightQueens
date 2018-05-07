@@ -1,8 +1,8 @@
 //Handles the logic 
 public class Board {
-	private final static int NQ = BoardPanel.NUM_QUEENS;
+	private final static int NQ = BoardFrame.NUM_QUEENS;
 	private int placedQueens;
-	private String[][] b; //Could be boolean?
+	private String[][] b; //Could be boolean? --> cannot check null for bool
 	
 	public Board() {
 		b = new String[NQ][NQ];
@@ -21,25 +21,29 @@ public class Board {
 	
 	//Logical Methods //Should hash every position 
 	private boolean isRowClear(int r, int c) {
-		if(b[r][c] == null ) { return true; } //Reached end of board
+		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board
 		if(b[r][c].equals("Q") ) { return false; } //conflict
 		//else if(board[r][c].equals(" ") ) 
 		return isRowClear(r-1, c) && isRowClear(r+1, c); //If empty, 
 	}
 	
 	private boolean isColClear(int r, int c) {
-		if(b[r][c] == null ) { return true; } //Reached end of board
+		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board --> check before indexing out of bounds
 		if(b[r][c].equals("Q") ) { return false; } //conflict
 		//else if(board[r][c].equals(" ") ) 
-		return isColClear(r, c-1) && isRowClear(r, c+1); //If empty, 
+		return isColClear(r, c-1) && isColClear(r, c+1); //If empty, 
 	}
 	
 	private boolean isDiagonalClear(int r, int c) {
-		if(b[r][c] == null ) { return true; } //Reached end of board
+		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board
 		if(b[r][c].equals("Q") ) { return false; } //conflict
 		//else if(board[r][c].equals(" ") ) 
 		return isDiagonalClear(r+1, c+1) && isDiagonalClear(r-1, c-1) //Down right and up left
 				&& isDiagonalClear(r+1, c-1) && isDiagonalClear(r-1, c+1); //up Right and down left 
+	}
+	
+	private boolean isOutOfBounds(int r, int c) {
+		return r < 0 || r > NQ - 1 || c < 0 || c > NQ - 1;
 	}
 	
 	public boolean isClear(int r, int c) {
@@ -86,7 +90,7 @@ public class Board {
 	
 	public static void main(String[] args) {
 		Board x = new Board();
-		//x.addQueens();
+		x.addQueens();
 		System.out.println( x.isSolution() );
 		System.out.println(x);
 
