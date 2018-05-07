@@ -12,50 +12,56 @@ public class Board {
 	
 	//CONSTRUCTOR HELPER// 
 	private void fillBoard() {
-		for(int r = 0; r < NQ; r++) {
-			for(int c = 0; c < NQ; c++) {
+		for(int c = 0; c < NQ; c++) {
+			for(int r = 0; r < NQ; r++) {
 				b[r][c] = " "; 
 			}
 		}
 	}
 	
 	//Logical Methods //Should hash every position 
-	private boolean isRowClear(int r, int c) {
-		//if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		//if(b[r][c].equals("Q") ) { return false; } //conflict
-			//else if(board[r][c].equals(" ") ) 
-		for(int i = 0; i < NQ; i++) {
-			if(b[i][c].equals("Q") ) { return false; }
-		}
-		return true;
-		//return isRowClear(r-1, c) && isRowClear(r+1, c); //If empty, 
+	private boolean isRowClear(int r, int c, int dirFrom) {
+		//Base Cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflicting Queen
+		//Recurse
+		if(dirFrom == -1 ) { return isRowClear(r-1, c, -1 ); } //search left
+		if(dirFrom == 1) { return isRowClear(r+1, c, 1); } //search right 
+		
+		return isRowClear(r-1, c, -1) && isRowClear(r+1, c, 1 ); //one call to the left and one call to the right
 	}
 	
-	private boolean isColClear(int r, int c) {
-		//if( isOutOfBounds(r, c) ) { return true; } //Reached end of board --> check before indexing out of bounds
-		//if(b[r][c].equals("Q") ) { return false; } //conflict
-			//else if(board[r][c].equals(" ") ) 
-		for(int i = 0; i < NQ; i++) {
-			if(b[r][i].equals("Q") ) { return false; }
-		}
-		return true;
-		//return isColClear(r, c-1) && isColClear(r, c+1); //If empty, 
+	private boolean isColClear(int r, int c, int dirFrom) {
+		//Base Cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflicting Queen
+		//Recurse
+		if(dirFrom == -1 ) { return isColClear(r, c-1, -1 ); } //search left
+		if(dirFrom == 1) { return isColClear(r, c+1, 1); } //search right 
+		//If not left or right, call both
+		return isColClear(r, c-1, -1) && isColClear(r, c+1, 1 ); //one call to the left and one call to the right
 	}
 	
-	private boolean isDiagonalClear(int r, int c) {
-		if(isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		if(b[r][c].equals("Q") ) { return false; } //conflict
-		//else if(board[r][c].equals(" ") ) 
-		return isDiagonalClear(r+1, c+1) && isDiagonalClear(r-1, c-1) //Down right and up left
-				&& isDiagonalClear(r+1, c-1) && isDiagonalClear(r-1, c+1); //up Right and down left 
+	private boolean isDiagonalClear(int r, int c, int dirFrom) { //top-left, top-right, bottom-left, bottom-right : 1 2 3 4 -- 0 = all
+		//Base cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflict
+		//Recurse
+		if(dirFrom == 1) { return isDiagonalClear(r-1, c-1, 1); }	//top left
+		if(dirFrom == 2) { return isDiagonalClear(r+1, c-1, 2); }	//top right
+		if(dirFrom == 3) { return isDiagonalClear(r-1, c+1, 3); }	//bottom left
+		if(dirFrom == 4) { return isDiagonalClear(r+1, c+1, 4); }	//bottom right
+		//if 0, then call all with respective dir
+		return  isDiagonalClear(r-1, c-1, 1) && isDiagonalClear(r+1, c-1, 2) 
+				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
 	}
 	
 	private boolean isOutOfBounds(int r, int c) {
-		return r < 0 || r > NQ - 1 || c < 0 || c > NQ - 1;
+		return r < 0 || r >= NQ || c < 0 || c >= NQ;
 	}
 	
 	public boolean isClear(int r, int c) {
-		return isRowClear(r, c) && isColClear(r, c);// && isDiagonalClear(r, c);
+		return isRowClear(r, c, 0) && isColClear(r, c, 0) && isDiagonalClear(r, c, 0); 
 	}
 	
 	public boolean isSolution() {
@@ -65,16 +71,19 @@ public class Board {
 	//End Logic//
 	
 	public void addQueens() {
-		while(placedQueens < NQ) {
-			for(int r = 0; r < NQ; r++) {
-				for(int c = 0; c < NQ; c++) {
+		//Pretty sure this recurses infinitely
+		int count = 0;
+		//while( !isSolution() ) {
+			for(int c = 0; c < NQ; c++) {
+				for(int r = 0; r < NQ; r++) {
+
 					if( isClear(r, c) ) {
 						b[r][c] = "Q";
 						placedQueens++;
 					}
 				}
 			}
-		}
+		//}
 	}
 	
 	//GETTERS AND SETTERS//
@@ -84,8 +93,9 @@ public class Board {
 	
 	public String toString() {
 		String result = "";
-		for(int r = 0; r < NQ; r++) {
-			for(int c = 0; c < NQ; c++) {
+		for(int c = 0; c < NQ; c++) {
+			for(int r = 0; r < NQ; r++) {
+
 				if(b[r][c].equals("Q") )
 					result += b[r][c] + " ";
 				else 
@@ -93,7 +103,7 @@ public class Board {
 			}
 			result += "\n";
 		}
-		return result;
+		return result + "\nQueens Placed: " + placedQueens;
 	}
 	
 	public static void main(String[] args) {
@@ -101,6 +111,7 @@ public class Board {
 		x.addQueens();
 		System.out.println( x.isSolution() );
 		System.out.println(x);
+		System.out.println();
 
 	}
 }

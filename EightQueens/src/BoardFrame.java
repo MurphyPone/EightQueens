@@ -30,6 +30,7 @@ public class BoardFrame {
 	//Constructor
 	public BoardFrame() { 
 		b = new Board(); //Create the Board
+		b.addQueens();
 		buildFrame(); //Build the Frame 
 		createPanels(); //Create the ChessSquarePanels  
 	}
@@ -87,7 +88,7 @@ public class BoardFrame {
 	    		for (int c = 0; c < COLS; c++) {
 	    			bg = setPanelColor(r,c); //get the bg color based on index of array
 	    			boolean q = b.isQueen(r, c);
-	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); //TODO make the flag actually work
+	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 
 	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
 	            p.add(m);
 	         }
@@ -114,7 +115,7 @@ public class BoardFrame {
 	
 	public static void main(String[] args) {
 		BoardFrame x = new BoardFrame();
-		x.updatePanel(2, 2, true); //test to change 3,3 to true
+		//x.updatePanel(2, 2, true); //test to change 3,3 to true
 	}
 
 }
