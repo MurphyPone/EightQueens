@@ -39,6 +39,46 @@ boolean isDV(int r, int c) {
 		offset++
 }
 
+//ACTUAL CODE ///
+
+//Logical Methods //Should hash every position 
+	private boolean isRowClear(int r, int c, int dirFrom) {
+		//Base Cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflicting Queen
+		//Recurse
+		if(dirFrom == -1 ) { return isRowClear(r-1, c, -1 ); } //search left
+		if(dirFrom == 1) { return isRowClear(r+1, c, 1); } //search right 
+		
+		return isRowClear(r-1, c, -1) && isRowClear(r+1, c, 1 ); //one call to the left and one call to the right
+	}
+	
+	private boolean isColClear(int r, int c, int dirFrom) {
+		//Base Cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflicting Queen
+		//Recurse
+		if(dirFrom == -1 ) { return isColClear(r, c-1, -1 ); } //search left
+		if(dirFrom == 1) { return isColClear(r, c+1, 1); } //search right 
+		//If not left or right, call both
+		return isColClear(r, c-1, -1) && isColClear(r, c+1, 1 ); //one call to the left and one call to the right
+	}
+	
+	private boolean isDiagonalClear(int r, int c, int dirFrom) { //top-left, top-right, bottom-left, bottom-right : 1 2 3 4 -- 0 = all
+		//Base cases
+		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
+		if( isQueen(r, c) ) { return false; } //conflict
+		//Recurse
+		if(dirFrom == 1) { return isDiagonalClear(r-1, c-1, 1); }	//top left
+		if(dirFrom == 2) { return isDiagonalClear(r+1, c-1, 2); }	//top right
+		if(dirFrom == 3) { return isDiagonalClear(r-1, c+1, 3); }	//bottom left
+		if(dirFrom == 4) { return isDiagonalClear(r+1, c+1, 4); }	//bottom right
+		//if 0, then call all with respective dir
+		return  isDiagonalClear(r-1, c-1, 1) && isDiagonalClear(r+1, c-1, 2) 
+				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
+	}
+	
+	//
 
 
 

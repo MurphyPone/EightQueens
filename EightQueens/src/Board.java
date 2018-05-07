@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 //Handles the logic 
 public class Board {
 	private final static int NQ = BoardFrame.NUM_QUEENS;
@@ -19,27 +21,16 @@ public class Board {
 		}
 	}
 	
-	//Logical Methods //Should hash every position 
-	private boolean isRowClear(int r, int c, int dirFrom) {
-		//Base Cases
-		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		if( isQueen(r, c) ) { return false; } //conflicting Queen
-		//Recurse
-		if(dirFrom == -1 ) { return isRowClear(r-1, c, -1 ); } //search left
-		if(dirFrom == 1) { return isRowClear(r+1, c, 1); } //search right 
-		
-		return isRowClear(r-1, c, -1) && isRowClear(r+1, c, 1 ); //one call to the left and one call to the right
-	}
-	
-	private boolean isColClear(int r, int c, int dirFrom) {
-		//Base Cases
-		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		if( isQueen(r, c) ) { return false; } //conflicting Queen
-		//Recurse
-		if(dirFrom == -1 ) { return isColClear(r, c-1, -1 ); } //search left
-		if(dirFrom == 1) { return isColClear(r, c+1, 1); } //search right 
-		//If not left or right, call both
-		return isColClear(r, c-1, -1) && isColClear(r, c+1, 1 ); //one call to the left and one call to the right
+	//Logic
+	private boolean isValid(int r, int c, LinkedList<Queen> QP) {
+		for(Queen q : QP) {
+			if(q.getR() == r || q.getC() == c )
+				return false;
+			if(isDiagonalClear(r, c, 0))
+				return false;	
+		}
+		QP.add(new Queen(r, c));
+		return true;
 	}
 	
 	private boolean isDiagonalClear(int r, int c, int dirFrom) { //top-left, top-right, bottom-left, bottom-right : 1 2 3 4 -- 0 = all
@@ -56,12 +47,15 @@ public class Board {
 				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
 	}
 	
+	
+	
 	private boolean isOutOfBounds(int r, int c) {
 		return r < 0 || r >= NQ || c < 0 || c >= NQ;
 	}
 	
 	public boolean isClear(int r, int c) {
-		return isRowClear(r, c, 0) && isColClear(r, c, 0) && isDiagonalClear(r, c, 0); 
+		LinkedList<Queen> Q_P = new LinkedList<Queen>();
+		return isValid(r, c, Q_P); 
 	}
 	
 	public boolean isSolution() {
