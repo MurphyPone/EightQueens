@@ -26,24 +26,66 @@ public class Board {
 		for(Queen q : QP) {
 			if(q.getR() == r || q.getC() == c ) //obfuscate
 				return false;
-			if(isDiagonalClear(r, c, 0))
+			if(!isDiagonalClear(r, c, QP))
 				return false;	
 		}
-		return true;
+		return !isOutOfBounds(r, c); //lastly, ensure that the coords are inbounds
 	}
 	
-	private boolean isDiagonalClear(int r, int c, int dirFrom) { //top-left, top-right, bottom-left, bottom-right : 1 2 3 4 -- 0 = all
-		//Base cases
-		if( isOutOfBounds(r, c) ) { return true; } //Reached end of board
-		if( isQueen(r, c) ) { return false; } //conflict
-		//Recurse
-		if(dirFrom == 1) { return isDiagonalClear(r-1, c-1, 1); }	//top left
-		if(dirFrom == 2) { return isDiagonalClear(r+1, c-1, 2); }	//top right
-		if(dirFrom == 3) { return isDiagonalClear(r-1, c+1, 3); }	//bottom left
-		if(dirFrom == 4) { return isDiagonalClear(r+1, c+1, 4); }	//bottom right
-		//if 0, then call all with respective dir
-		return  isDiagonalClear(r-1, c-1, 1) && isDiagonalClear(r+1, c-1, 2) 
-				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
+	private boolean isDiagonalClear(int r, int c, LinkedList<Queen> QP) {
+		//Major diagonal = top left --> bottom right
+		
+		int row = r; //Pointers which walk the Board
+		int col = c;
+		
+		//check towards 0,0
+		while(row >= 0 && col >= 0) { 
+			if(hasQueen(row, col, QP) )
+				return false;
+			row--; //decrement
+			col--;
+		}
+		
+		//Reset pointers
+		row = r;
+		col = c;
+		
+		//check towards n,n
+		while(row < NQ && col < NQ ) { 
+			if(hasQueen(row, col, QP) )
+				return false;
+			row++; //Increment 
+			col++;
+		}
+		
+		//Minor diagonal = top right--> bottom left //
+		
+		row = r;
+		col = c;
+		
+		//Towards bottom left
+		while(row >=  0 && col < NQ ) { 
+			if(hasQueen(row, col, QP) )
+				return false;
+			row--; //decrement to the left
+			col++;//Increment to go towards 0, n
+		}
+		
+		//Reset counters
+		row = r;
+		col = c;
+		
+		//Towards top right
+		while(row <  NQ && col >= 0) { 
+			if(hasQueen(row, col, QP) )
+				return false;
+			row++; //Increment to the right
+			col--;//Decrement towards n, 0
+		}
+
+		
+		return true;	//If no queens found return true
+		
 	}
 	
 	private boolean isOutOfBounds(int r, int c) {
@@ -55,10 +97,6 @@ public class Board {
 		return addQueens(0, 0, list); //Start with empty list
 	}
 	
-	public boolean isSolution() {
-		return (placedQueens == 8);
-	}
-	
 	//End Logic//
 	
 	public boolean addQueens(int r, int c, LinkedList<Queen> QP) {
@@ -67,8 +105,8 @@ public class Board {
 			for(Queen q : QP) 
 				setQueen(q); //update the board to match the List
 			return true;
-		} else if( !isValid(r, c, QP) ) { 
-			return false; 
+		// } else if( !isValid(r, c, QP) ) { //Breaks out too early
+		//	return false; 
 		} else {
 			for(int j = 0; j < NQ; j++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
 				if( isValid(r, j, QP) ) {
@@ -84,6 +122,15 @@ public class Board {
 	//GETTERS AND SETTERS//
 	public boolean isQueen(int r, int c) {
 		return b[r][c].equals("Q");
+	}
+	
+	//Compares a list of Queens to a given point on a board
+	private boolean hasQueen(int r, int c, LinkedList<Queen> QP) {
+		for(Queen q : QP) {
+			if(q.getR() == r && q.getC() == c)
+				return true;
+		}
+		return false;
 	}
 	
 	public void setQueen(Queen q) {
