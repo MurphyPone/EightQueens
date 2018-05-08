@@ -52,7 +52,7 @@ public class Board {
 	
 	public boolean solve() {
 		LinkedList<Queen> list = new LinkedList<Queen>();
-		return addQueens(0, list); //Start with empty list
+		return addQueens(0, 0, list); //Start with empty list
 	}
 	
 	public boolean isSolution() {
@@ -61,17 +61,20 @@ public class Board {
 	
 	//End Logic//
 	
-	public boolean addQueens(int r, LinkedList<Queen> QP) {
+	public boolean addQueens(int r, int c, LinkedList<Queen> QP) {
 		//Base Case: check if finished
 		if(QP.size() == NQ) {
 			for(Queen q : QP) 
 				setQueen(q); //update the board to match the List
 			return true;
+		} else if( !isValid(r, c, QP) ) { 
+			return false; 
 		} else {
-			for(int c = 0; c < NQ; c++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
-				if(isValid(r, c, QP) ) {
+			for(int j = 0; j < NQ; j++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
+				if( isValid(r, j, QP) ) {
 					LinkedList<Queen> temp = (LinkedList<Queen>) QP.clone();
-					return addQueens(r+1, temp);
+					temp.add( new Queen(r, j) );
+					return addQueens(r+1, 0, temp);
 				}
 			}
 		}
@@ -104,7 +107,7 @@ public class Board {
 	
 	public static void main(String[] args) {
 		Board x = new Board();
-		System.out.println( 	x.solve() );
+		System.out.println( x.solve() );
 		System.out.println(x);
 		System.out.println();
 
