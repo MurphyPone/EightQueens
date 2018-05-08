@@ -24,12 +24,11 @@ public class Board {
 	//Logic
 	private boolean isValid(int r, int c, LinkedList<Queen> QP) {
 		for(Queen q : QP) {
-			if(q.getR() == r || q.getC() == c )
+			if(q.getR() == r || q.getC() == c ) //obfuscate
 				return false;
 			if(isDiagonalClear(r, c, 0))
 				return false;	
 		}
-		QP.add(new Queen(r, c));
 		return true;
 	}
 	
@@ -47,15 +46,13 @@ public class Board {
 				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
 	}
 	
-	
-	
 	private boolean isOutOfBounds(int r, int c) {
 		return r < 0 || r >= NQ || c < 0 || c >= NQ;
 	}
 	
-	public boolean isClear(int r, int c) {
-		LinkedList<Queen> Q_P = new LinkedList<Queen>();
-		return isValid(r, c, Q_P); 
+	public boolean solve() {
+		LinkedList<Queen> list = new LinkedList<Queen>();
+		return addQueens(0, list); //Start with empty list
 	}
 	
 	public boolean isSolution() {
@@ -64,39 +61,21 @@ public class Board {
 	
 	//End Logic//
 	
-	public void addQueens() {
-		//Pretty sure this recurses infinitely
-		int count = 0;
-		//while( !isSolution() ) {
-			for(int c = 0; c < NQ; c++) {
-				for(int r = 0; r < NQ; r++) {
-
-					if( isClear(r, c) ) {
-						b[r][c] = "Q";
-						placedQueens++;
-					}
-				}
-			}
-		//}
-	}
-	
-	
-	public boolean addQueens(LinkedList<Queen> QP) {
+	public boolean addQueens(int r, LinkedList<Queen> QP) {
+		//Base Case: check if finished
 		if(QP.size() == NQ) {
-			for( Queen q : QP ) {
-				b[q.r][q.c] = "Q";
-				return true; //copy over the realy Queens
-			}
+			for(Queen q : QP) 
+				setQueen(q); //update the board to match the List
+			return true;
 		} else {
-			for(int r = 0; r < NQ; r++ ) {
-				for(int c = 0; c < NQ c++; ) {
-					if ( isValid(r, c) )
-						return true;
-					else 
-						return false/break?
+			for(int c = 0; c < NQ; c++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
+				if(isValid(r, c, QP) ) {
+					LinkedList<Queen> temp = (LinkedList<Queen>) QP.clone();
+					return addQueens(r+1, temp);
 				}
 			}
 		}
+		return false;
 	}
 	
 	//GETTERS AND SETTERS//
@@ -104,8 +83,8 @@ public class Board {
 		return b[r][c].equals("Q");
 	}
 	
-	public void setQueen(int r, int c) {
-		b[r][c] = "Q";
+	public void setQueen(Queen q) {
+		b[q.getR()][q.getC()] = "Q";
 	}
 	
 	public String toString() {
@@ -114,9 +93,9 @@ public class Board {
 			for(int r = 0; r < NQ; r++) {
 
 				if(b[r][c].equals("Q") )
-					result += b[r][c] + " ";
+					result += b[r][c] + "  ";
 				else 
-					result += "X ";
+					result += "X  ";
 			}
 			result += "\n";
 		}
@@ -125,9 +104,7 @@ public class Board {
 	
 	public static void main(String[] args) {
 		Board x = new Board();
-		x.setQueen(2, 0);
-		x.addQueens();
-		System.out.println( x.isSolution() );
+		System.out.println( 	x.solve() );
 		System.out.println(x);
 		System.out.println();
 

@@ -14,13 +14,34 @@ Board.addQueens(LinkedList<Queen> QP) {
 	else 
 		for(row)
 			//check if you can place a queen in each of the columns
-			//if so, then return true
+			//if so, then return true || return addQueens() from that col
 			//if not false
 			//call this method 8 times from each row 
 			
 }
 
-
+//V3 
+public boolean addQueens(int row, int col, LinkedList<Queen> QP) {
+		if(QP.size() == NQ) { //If solution found
+			for( Queen q : QP ) {	//Iterate over the list
+				b[q.getR() ][q.getC() ] = "Q";	//Copy the list over to the Board
+				placedQueens++;
+			}
+			return true; //Break out 
+		} else {
+			for(int r = row; r < NQ; r++ ) {	//Search current row
+				for(int c = col; c < NQ; c++ ) { //Search every column
+					if( isValid(r, c, QP) )	 {//If valid spot found
+						LinkedList<Queen> temp = (LinkedList<Queen>) QP.clone();
+						temp.add(new Queen(r, c)); //Update list
+						return addQueens(r, c, temp); // if return false, the list will have too many entries...
+						//NEVER USES THE FACT THAT IT's TRUE 
+					} 
+				}
+			}
+		}
+		return false; //shouldn't make it here
+	}
 
 isValid(List QP, int r, c) {
 	for Queen q : qp 
@@ -78,7 +99,23 @@ boolean isDV(int r, int c) {
 				&& isDiagonalClear(r-1, c+1, 3) &&isDiagonalClear(r+1, c+1, 4);
 	}
 	
-	//
+	//Old 
+	public void addQueens() {
+		//Pretty sure this recurses infinitely
+		int count = 0;
+		//while( !isSolution() ) {
+			for(int c = 0; c < NQ; c++) {
+				for(int r = 0; r < NQ; r++) {
+
+					if( isClear(r, c) ) {
+						b[r][c] = "Q";
+						placedQueens++;
+					}
+				}
+			}
+		//}
+	}
+	
 
 
 

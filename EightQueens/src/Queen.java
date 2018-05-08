@@ -12,24 +12,10 @@ public class Queen {
 		c = col;
 	}
 
-	public int getR() {
-		return r;
-	}
-
-	public void setR(int r) {
-		this.r = r;
-	}
-
-	public int getC() {
-		return c;
-	}
-
-	public void setC(int c) {
-		this.c = c;
-	}
+	public int getR() { return r; }
+	public int getC() { return c; }
 	
-	public void setRC(int row, int col) {
-		r = row;
-		c = col;
+	public String toString() {
+		return "(" + r + ", " + c + ")";
 	}
 }

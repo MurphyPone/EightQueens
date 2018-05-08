@@ -15,7 +15,7 @@ public class BoardFrame {
 	private JPanel header, grid, footer; //Panels 
 	ChessSquarePanel[][] spaces = new ChessSquarePanel[ROWS][COLS]; // not sure how this is different than Grids?
 	
-	public static final int NUM_QUEENS = 6;
+	public static final int NUM_QUEENS = 8;
 	private static final int ROWS = NUM_QUEENS;
 	private static final int COLS = NUM_QUEENS; 
 	
