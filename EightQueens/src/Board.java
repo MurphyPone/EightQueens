@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 //Handles the logic 
@@ -94,6 +95,11 @@ public class Board {
 	
 	public boolean solve() {
 		LinkedList<Queen> list = new LinkedList<Queen>();
+		/*ArrayList<LinkedList<Queen>> solutions = new ArrayList<LinkedList<Queen>>();  
+		for(int i = 0; i < NQ; i++) {
+			solutions.add
+		}
+		*/
 		return addQueens(0, 0, list); //Start with empty list
 	}
 	
@@ -112,7 +118,8 @@ public class Board {
 				if( isValid(r, j, QP) ) {
 					LinkedList<Queen> temp = (LinkedList<Queen>) QP.clone();
 					temp.add( new Queen(r, j) );
-					return addQueens(r+1, 0, temp);
+					if( addQueens(r+1, 0, temp) == true)	//If can place queens
+						return true;
 				}
 			}
 		}
@@ -149,7 +156,7 @@ public class Board {
 			}
 			result += "\n";
 		}
-		return result + "\nQueens Placed: " + placedQueens;
+		return result;
 	}
 	
 	public static void main(String[] args) {
