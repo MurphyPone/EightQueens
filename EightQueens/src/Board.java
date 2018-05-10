@@ -93,14 +93,9 @@ public class Board {
 		return r < 0 || r >= NQ || c < 0 || c >= NQ;
 	}
 	
-	public boolean solve() {
+	public boolean solve(int startR, int startC) {
 		LinkedList<Queen> list = new LinkedList<Queen>();
-		/*ArrayList<LinkedList<Queen>> solutions = new ArrayList<LinkedList<Queen>>();  
-		for(int i = 0; i < NQ; i++) {
-			solutions.add
-		}
-		*/
-		return addQueens(0, 0, list); //Start with empty list
+		return addQueens(startR, startC, list); //Start with empty list
 	}
 	
 	//End Logic//
@@ -129,6 +124,10 @@ public class Board {
 	//GETTERS AND SETTERS//
 	public boolean isQueen(int r, int c) {
 		return b[r][c].equals("Q");
+	}
+	
+	public String getPiece(int r, int c) {
+		return b[r][c];
 	}
 	
 	//Compares a list of Queens to a given point on a board
@@ -161,7 +160,7 @@ public class Board {
 	
 	public static void main(String[] args) {
 		Board x = new Board();
-		System.out.println( x.solve() );
+		System.out.println( x.solve(0, 0) ); //TODO add wrap-around solving...
 		System.out.println(x);
 		System.out.println();
 

@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -9,7 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class BoardFrame {
-	private Board b; //has a Board
+	private SolvedBoards sb; //has a SolvedBoards
+	int solutionNum; //Keeps track of which solution is being displayed
 	//Panel/Frame stuff
 	private JFrame window; //Outermost grpahical component
 	private JPanel header, grid, footer; //Panels 
@@ -29,8 +32,8 @@ public class BoardFrame {
 	
 	//Constructor
 	public BoardFrame() { 
-		b = new Board(); //Create the Board
-		b.solve();
+		sb = new SolvedBoards(); //Create the Board
+		solutionNum = 0;
 		buildFrame(); //Build the Frame 
 		createPanels(); //Create the ChessSquarePanels  
 	}
@@ -38,7 +41,6 @@ public class BoardFrame {
 	//graphics helpers
 	private void buildFrame() {
 		window = new JFrame("EightQueens");
-		window = new JFrame("Practicing");
 	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    window.setSize(new Dimension(WIDTH, HEIGHT));
 	    window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS)); 
@@ -74,7 +76,17 @@ public class BoardFrame {
 		result.setMaximumSize(new Dimension(WIDTH, 50));
 		result.setPreferredSize(new Dimension(WIDTH, 40));
 		result.setBackground(FOOTER_COLOR);
-		result.add(new JLabel("eight Queens"));
+		result.add(new JLabel("Next Solution"));
+		
+		//Mouse Listener stuff
+		result.addMouseListener(new MouseListener() { 
+			public void mousePressed(MouseEvent me) { }
+	        public void mouseReleased(MouseEvent me) { }
+	        public void mouseEntered(MouseEvent me) { }
+	        public void mouseExited(MouseEvent me) { }
+	        public void mouseClicked(MouseEvent me) { nextSol(); } 
+	        });
+		
 	    return result;
 	}
 	
@@ -87,7 +99,7 @@ public class BoardFrame {
 	    for (int r = 0; r < ROWS; r++) {
 	    		for (int c = 0; c < COLS; c++) {
 	    			bg = setPanelColor(r,c); //get the bg color based on index of array
-	    			boolean q = b.isQueen(r, c);
+	    			boolean q = sb.get(solutionNum).isQueen(r, c);
 	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 
 	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
 	            p.add(m);
@@ -113,9 +125,33 @@ public class BoardFrame {
 	        return DARK_COLOR;
 	}
 	
+	private boolean nextSol() {		
+		//Logic
+		int i = solutionNum + 1;
+		System.out.println("solutionNum : " + i);
+		if(sb.get(i) != null ) { //Might need to be try catch
+			solutionNum = i;
+			//Update spaces //TODO PICKUP HEREEEEE
+			for (int r = 0; r < ROWS; r++) {
+	    			for (int c = 0; c < COLS; c++) {
+	    				ChessSquarePanel p = new ChessSquarePanel();
+	    				if(sb.get(i).getPiece(r, c).equals("Q") )
+	    					p.setQueen(true);
+	    				spaces[r][c] = p;
+	    			}
+			}
+			//update panels
+			window.repaint(); //update the window to display the next board
+			return true;
+		} else {
+			solutionNum = 0; //cycle through all solutions
+			window.repaint(); //update the window to display the next board
+			return false;
+		}
+	}
+	
 	public static void main(String[] args) {
 		BoardFrame x = new BoardFrame();
-		//x.updatePanel(2, 2, true); //test to change 3,3 to true
 	}
 
 }
