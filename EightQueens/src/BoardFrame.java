@@ -92,7 +92,6 @@ public class BoardFrame {
 	    			bg = setPanelColor(r,c); //get the bg color based on index of array
 	    			boolean q = sb.get(solutionNum).isQueen(r, c);
 	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 
-	    			m.setQueen(q);
 	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
 	            p.add(m);
 	         }
