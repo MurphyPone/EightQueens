@@ -6,6 +6,7 @@ public class SolvedBoards {
 	public SolvedBoards() {
 		int numBoards = (int) Math.pow(BoardFrame.NUM_QUEENS, 2);
 		boards = new ArrayList<Board>(numBoards); //#solution ~= N^2 + 2N
+		boards.add(new Board()); //First board is blank by default
 		
 		for(int r = 0; r < BoardFrame.NUM_QUEENS; r ++) {
 			for(int c = 0; c < BoardFrame.NUM_QUEENS; c ++) {

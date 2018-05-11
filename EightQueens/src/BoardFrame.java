@@ -89,13 +89,13 @@ public class BoardFrame {
 	    Color bg;
 	    for (int r = 0; r < ROWS; r++) {
 	    		for (int c = 0; c < COLS; c++) {
-	    			bg = setPanelColor(r,c); //get the bg color based on index of array
-	    			boolean q = sb.get(solutionNum).isQueen(r, c);
-	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 
+	    			bg = setPanelColor(r, c); //get the bg color based on index of array
+	    			boolean q = sb.get(solutionNum).isQueen(r, c); //Determine if space on given Board is a Queen
+	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 	//Create the Panel
 	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
-	            p.add(m);
+	            p.add(m); //Add the sub-panel to the grid panel
 	         }
-	      }
+	    }
 	    return p;
 	}
 	
@@ -116,25 +116,30 @@ public class BoardFrame {
 	        return DARK_COLOR;
 	}
 	
-	private boolean nextSol() {		
+	private boolean nextSol() {	
 		int i = solutionNum + 1;
 		
+		//Cycle logic
 		try {
 			sb.get(i); //Test for IOOB
 			solutionNum = i; //If doable, then update the solutionNumber
-			grid = buildGridPanel(); //rebuild the grid panel //THIS IS PROBABLY REALLY RESOURCEFULLY INEFFICIENT, BUT EASIER THAN ITERATING OVER THE SB/spaces/grid and matching those three up..
-			window.repaint();	//update the window
-			System.out.println("solutionNum : " + solutionNum );
-			System.out.println(sb.get(i));
-			return true;
 		} catch(IndexOutOfBoundsException e) {
             solutionNum = 0; //cycle
-			grid = buildGridPanel(); //rebuild the grid panel 
-            window.repaint();	//update to display new board
-			System.out.println("solutionNum : " + solutionNum );
-			System.out.println(sb.get(solutionNum));
-            return false;
 		}
+		
+		//Update panel according to new Board 
+		for(int r = 0; r < NUM_QUEENS; r++) {
+			for(int c = 0; c < NUM_QUEENS; c++) {
+    				boolean q = sb.get(solutionNum).isQueen(r, c); //Determine if space on given Board is a Queen
+    				spaces[r][c].setQueen(q); //update panel
+			}
+		}
+		
+		window.repaint();	//update the window
+		System.out.println("solutionNum : " + solutionNum );
+		System.out.println(sb.get(solutionNum));
+		
+		return true;
 	}
 	
 	public boolean addBoard(Board b) {
@@ -144,9 +149,6 @@ public class BoardFrame {
 	
 	public static void main(String[] args) {
 		BoardFrame x = new BoardFrame();
-		Board filler = new Board();
-		x.addBoard(filler); //Create an invalid board and add it to the list of solved boards to verify that the panels are not updating properly
-
 	}
 
 }
