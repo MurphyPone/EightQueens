@@ -4,13 +4,11 @@ import java.util.LinkedList;
 //Handles the logic 
 public class Board {
 	private final static int NQ = BoardFrame.NUM_QUEENS;
-	private int placedQueens;
 	private String[][] b; //Could be boolean? --> cannot check null for bool
 	
 	public Board() {
 		b = new String[NQ][NQ];
 		fillBoard(); //config
-		placedQueens = 0;
 	}
 	
 	//CONSTRUCTOR HELPER// 
@@ -109,7 +107,7 @@ public class Board {
 		// } else if( !isValid(r, c, QP) ) { //Breaks out too early
 		//	return false; 
 		} else {
-			for(int j = 0; j < NQ; j++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
+			for(int j = c; j < NQ + c; j++) { //Unnecessary loops, but O(n) even if I keep track of current col as a param
 				if( isValid(r, j, QP) ) {
 					LinkedList<Queen> temp = (LinkedList<Queen>) QP.clone();
 					temp.add( new Queen(r, j) );

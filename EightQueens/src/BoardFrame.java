@@ -1,22 +1,24 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class BoardFrame {
 	private SolvedBoards sb; //has a SolvedBoards
 	int solutionNum; //Keeps track of which solution is being displayed
 	//Panel/Frame stuff
-	private JFrame window; //Outermost grpahical component
-	private JPanel header, grid, footer; //Panels 
-	ChessSquarePanel[][] spaces = new ChessSquarePanel[ROWS][COLS]; // not sure how this is different than Grids?
+	private JFrame window; //Outermost graphical component
+	private JPanel header, grid; //Panels 
+	private JButton footer; //Button to iterate over found solutions
+	ChessSquarePanel[][] spaces = new ChessSquarePanel[ROWS][COLS]; 
 	
 	public static final int NUM_QUEENS = 8;
 	private static final int ROWS = NUM_QUEENS;
@@ -26,9 +28,7 @@ public class BoardFrame {
 	private static final int WIDTH = 100 * COLS;
 	private static final Color LIGHT_COLOR = Color.LIGHT_GRAY;
 	private static final Color DARK_COLOR = Color.DARK_GRAY;
-	private static final Color FOOTER_COLOR = Color.MAGENTA;
-	private static final Color HEADER_COLOR = Color.CYAN;
-	
+	private static final Color HEADER_COLOR = Color.ORANGE;
 	
 	//Constructor
 	public BoardFrame() { 
@@ -50,7 +50,7 @@ public class BoardFrame {
 		//Construct the panels
 		header = buildHeaderPanel();
 		grid = buildGridPanel();
-		footer = buildFooterPanel();
+		footer = buildFooterButton();
 		//Add the panels to the Window
 		window.add(header);
 		window.add(grid);
@@ -70,22 +70,13 @@ public class BoardFrame {
 	    return result;
 	}
 	
-	private JPanel buildFooterPanel() {
-		JPanel result = new JPanel();
-		result.setMinimumSize(new Dimension(WIDTH, 10));
-		result.setMaximumSize(new Dimension(WIDTH, 50));
-		result.setPreferredSize(new Dimension(WIDTH, 40));
-		result.setBackground(FOOTER_COLOR);
-		result.add(new JLabel("Next Solution"));
-		
-		//Mouse Listener stuff
-		result.addMouseListener(new MouseListener() { 
-			public void mousePressed(MouseEvent me) { }
-	        public void mouseReleased(MouseEvent me) { }
-	        public void mouseEntered(MouseEvent me) { }
-	        public void mouseExited(MouseEvent me) { }
-	        public void mouseClicked(MouseEvent me) { nextSol(); } 
-	        });
+	private JButton buildFooterButton() { //Help w/buttons from Sean
+		JButton result = new JButton("Next Solution");
+		result.setHorizontalAlignment(SwingConstants.CENTER);
+		result.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { nextSol(); }
+		});
 		
 	    return result;
 	}
@@ -101,11 +92,12 @@ public class BoardFrame {
 	    			bg = setPanelColor(r,c); //get the bg color based on index of array
 	    			boolean q = sb.get(solutionNum).isQueen(r, c);
 	    			ChessSquarePanel m = new ChessSquarePanel(q, bg); 
+	    			m.setQueen(q);
 	            spaces[r][c] = m;  // keep a reference to the panel, so we can change it
 	            p.add(m);
 	         }
 	      }
-	      return p;
+	    return p;
 	}
 	
 	//GRAPHICAL HELPERS//
@@ -126,32 +118,36 @@ public class BoardFrame {
 	}
 	
 	private boolean nextSol() {		
-		//Logic
 		int i = solutionNum + 1;
-		System.out.println("solutionNum : " + i);
-		if(sb.get(i) != null ) { //Might need to be try catch
-			solutionNum = i;
-			//Update spaces //TODO PICKUP HEREEEEE
-			for (int r = 0; r < ROWS; r++) {
-	    			for (int c = 0; c < COLS; c++) {
-	    				ChessSquarePanel p = new ChessSquarePanel();
-	    				if(sb.get(i).getPiece(r, c).equals("Q") )
-	    					p.setQueen(true);
-	    				spaces[r][c] = p;
-	    			}
-			}
-			//update panels
-			window.repaint(); //update the window to display the next board
+		
+		try {
+			sb.get(i); //Test for IOOB
+			solutionNum = i; //If doable, then update the solutionNumber
+			grid = buildGridPanel(); //rebuild the grid panel //THIS IS PROBABLY REALLY RESOURCEFULLY INEFFICIENT, BUT EASIER THAN ITERATING OVER THE SB/spaces/grid and matching those three up..
+			window.repaint();	//update the window
+			System.out.println("solutionNum : " + solutionNum );
+			System.out.println(sb.get(i));
 			return true;
-		} else {
-			solutionNum = 0; //cycle through all solutions
-			window.repaint(); //update the window to display the next board
-			return false;
+		} catch(IndexOutOfBoundsException e) {
+            solutionNum = 0; //cycle
+			grid = buildGridPanel(); //rebuild the grid panel 
+            window.repaint();	//update to display new board
+			System.out.println("solutionNum : " + solutionNum );
+			System.out.println(sb.get(solutionNum));
+            return false;
 		}
+	}
+	
+	public boolean addBoard(Board b) {
+		sb.add(b);
+		return true;
 	}
 	
 	public static void main(String[] args) {
 		BoardFrame x = new BoardFrame();
+		Board filler = new Board();
+		x.addBoard(filler); //Create an invalid board and add it to the list of solved boards to verify that the panels are not updating properly
+
 	}
 
 }
